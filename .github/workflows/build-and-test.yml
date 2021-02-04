@@ -76,7 +76,7 @@ jobs:
           - uses: actions/checkout@v2
           - run: |
               docker run --rm --privileged hypriot/qemu-register
-          - uses: docker://arm64v8/python:latest
+          - uses: docker://arm64v8/alpine:latest
             with:
               args: 'bash .github/scripts/arm64_test.sh' 
           - run: |
