@@ -71,7 +71,6 @@ jobs:
     make-alpine-arm64:
         name: Make Alpine Package for arm64 
         runs-on: ubuntu-latest
-        container: alpine:latest
         steps:
           - uses: actions/checkout@v2
           - run: |
