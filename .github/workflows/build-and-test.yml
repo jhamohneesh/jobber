@@ -36,7 +36,7 @@ jobs:
                 name: rhel-pkg
                 path: pkgs
 
-    make-alpine-pkg:
+    make-x86-alpine-pkg:
         name: Make Alpine package
         runs-on: ubuntu-latest
         container: alpine:latest
@@ -68,7 +68,19 @@ jobs:
               with:
                 name: alpine-pkg
                 path: pkgs
-
+    make alpine arm64:
+        name: Make Alpine Package for arm64 
+        runs-on: ubuntu-latest
+        container: alpine:latest
+        steps:
+          - uses: actions/checkout@v2
+          - run: |
+              docker run --rm --privileged hypriot/qemu-register
+          - uses: docker://arm64v8/python:latest
+            with:
+              args: 'bash .github/scripts/arm64_test.sh' 
+          - run: |
+              ls /home/runner/work/
     make-debian-pkg:
         name: Make Debian package
         runs-on: ubuntu-latest
