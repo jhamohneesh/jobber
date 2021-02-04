@@ -77,7 +77,7 @@ jobs:
               docker run --rm --privileged hypriot/qemu-register
           - uses: docker://arm64v8/alpine:latest
             with:
-              args: 'bash .github/scripts/arm64_test.sh' 
+              args: 'sh .github/scripts/arm64_test.sh' 
           - run: |
               ls /home/runner/work/
     make-debian-pkg:
