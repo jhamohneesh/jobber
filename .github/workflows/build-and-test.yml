@@ -68,7 +68,7 @@ jobs:
               with:
                 name: alpine-pkg
                 path: pkgs
-    make alpine arm64:
+    make-alpine-arm64:
         name: Make Alpine Package for arm64 
         runs-on: ubuntu-latest
         container: alpine:latest
