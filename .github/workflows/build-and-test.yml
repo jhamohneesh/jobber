@@ -79,7 +79,7 @@ jobs:
             with:
               args: 'sh .github/scripts/arm64_test.sh' 
           - run: |
-              ls /home/runner/work/jobber/
+              ls /home/runner/work/jobber/jobber
     make-debian-pkg:
         name: Make Debian package
         runs-on: ubuntu-latest
