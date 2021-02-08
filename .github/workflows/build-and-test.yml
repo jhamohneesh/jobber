@@ -84,6 +84,15 @@ jobs:
             with:
                 name: alpine-pkg-arm64
                 path: pkgs
+          - uses: actions/upload-release-asset@v1
+            env:
+               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            with:
+              # this is a release to the event is called release: https://help.github.com/en/actions/reference/events-that-trigger-workflows#release-event-release
+              # the release event has the structure of this response https://developer.github.com/v3/repos/releases/#create-a-release
+              upload_url: ${{ github.event.release.upload_url }}
+              asset_path: pkgs
+              asset_name: alpine-pkg-arm64
     make-debian-pkg:
         name: Make Debian package
         runs-on: ubuntu-latest
