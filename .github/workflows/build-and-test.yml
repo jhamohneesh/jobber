@@ -80,6 +80,10 @@ jobs:
               args: 'sh .github/scripts/arm64_test.sh' 
           - run: |
               ls /home/runner/work/jobber/jobber/pkgs
+          - uses: actions/upload-artifact@v1.0.0
+            with:
+                name: alpine-pkg-arm64
+                path: pkgs
     make-debian-pkg:
         name: Make Debian package
         runs-on: ubuntu-latest
