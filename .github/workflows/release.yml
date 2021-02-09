@@ -23,14 +23,9 @@ jobs:
           name: alpine-pkg-arm64
           path: pkgs
       - name: Upload wheel manylinux2014 to release
-        # upload the generated manylinux2014 wheel to the github release. Only a single file per step can be uploaded at the moment
-        uses: actions/upload-release-asset@v1
+        uses: skx/github-action-publish-binaries@release-1.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # this is a release to the event is called release: https://help.github.com/en/actions/reference/events-that-trigger-workflows#release-event-release
-          # the release event has the structure of this response https://developer.github.com/v3/repos/releases/#create-a-release
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: pkgs/
-          asset_name: alpine-pkg-arm64
-          asset_content_type: application/zip # application/octet-stream
+          releaseId: ${{ needs.create_release.outputs.id }}
+          args: '*.bin'
