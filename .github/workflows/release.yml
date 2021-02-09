@@ -22,9 +22,17 @@ jobs:
         with:
           name: alpine-pkg-arm64
           path: pkgs
-      - name: Upload to release
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: pkg/
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Create release
+      uses: Roang-zero1/github-create-release-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create GitHub release
+      uses: Roang-zero1/github-upload-release-artifacts-action@master
+      with:
+        args: pkgs
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
