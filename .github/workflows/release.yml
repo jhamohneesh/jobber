@@ -1,5 +1,5 @@
 on:
-  push:
+  release:
     branches: [ master, maint-1.4 ]
 
 jobs:
