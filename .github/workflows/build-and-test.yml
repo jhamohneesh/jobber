@@ -101,44 +101,40 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt-get install -y dpkg-dev debhelper dh-systemd
-
             - name: Clone repo
               uses: actions/checkout@v2
-
             - name: Build package
               run: make -C "${GITHUB_WORKSPACE}/packaging/debian" pkg-local "DESTDIR=${GITHUB_WORKSPACE}/pkgs/"
-
             - name: Publish package
               uses: actions/upload-artifact@v1.0.0
               with:
                 name: debian-pkg
                 path: pkgs
-
     make-wheel-linux-arm64:
-      name: make alpine binary for linux arm64 
-      runs-on: linux
-      steps:
-        - name: Checkout repo
-          uses: actions/checkout@v2
-        - name: Set up emulation
-          run: |
-            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-        - name: Container for arm64 
-          uses: docker://arm64v8/alpine:latest
-          with:
-             args: 'sh .github/scripts/arm64_test.sh' 
-        - name : Checking the binaries
-          run: |
-              ls /home/runner/work/jobber/jobber/pkgs
-        - name: Upload wheel manylinux2014 to release
-        # upload the generated manylinux2014 wheel to the github release. Only a single file per step can be uploaded at the moment
-          uses: actions/upload-release-asset@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-          # this is a release to the event is called release: https://help.github.com/en/actions/reference/events-that-trigger-workflows#release-event-release
-          # the release event has the structure of this response https://developer.github.com/v3/repos/releases/#create-a-release
-            upload_url: ${{ github.event.release.upload_url }}
-            asset_path: pkgs
-            asset_name: arm64
-            asset_content_type: application/zip # application/octet-stream
+        name: make alpine binary for linux arm64 
+        runs-on: linux
+        steps:
+          - name: Checkout repo
+            uses: actions/checkout@v2
+          - name: Set up emulation
+            run: |
+              docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          - name: Container for arm64 
+            uses: docker://arm64v8/alpine:latest
+            with:
+               args: 'sh .github/scripts/arm64_test.sh' 
+          - name : Checking the binaries
+            run: |
+                ls /home/runner/work/jobber/jobber/pkgs
+          - name: Upload wheel manylinux2014 to release
+          # upload the generated manylinux2014 wheel to the github release. Only a single file per step can be uploaded at the moment
+            uses: actions/upload-release-asset@v1
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            with:
+            # this is a release to the event is called release: https://help.github.com/en/actions/reference/events-that-trigger-workflows#release-event-release
+            # the release event has the structure of this response https://developer.github.com/v3/repos/releases/#create-a-release
+              upload_url: ${{ github.event.release.upload_url }}
+              asset_path: pkgs
+              asset_name: arm64
+              asset_content_type: application/zip # application/octet-stream
