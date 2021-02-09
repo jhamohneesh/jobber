@@ -3,36 +3,38 @@ on:
     branches: [ master, maint-1.4 ]
 
 jobs:
-  make-wheel-linux-arm64:
-    name: Make arm64 binaries
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-      - run: |
-          docker run --rm --privileged hypriot/qemu-register
-      - uses: docker://arm64v8/alpine:latest
-        with:
-          args: 'sh .github/scripts/arm64_test.sh' 
-      - run: |
-          ls /home/runner/work/jobber/jobber/pkgs
-      - uses: actions/upload-artifact@v1.0.0
-        with:
-          name: alpine-pkg-arm64
-          path: pkgs
-  release:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Create release
-      uses: Roang-zero1/github-create-release-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Create GitHub release
-      uses: Roang-zero1/github-upload-release-artifacts-action@master
+    - uses: actions/checkout@v2
+    - name: Build project # This would actually build your project, using zip for an example artifact
+      run: |
+          zip --junk-paths my-artifact README.md
+    - uses: octokit/request-action@v2.x
+      id: get_latest_release
       with:
-        args: pkgs
+          route: GET /repos/:repository/releases/latest
+          repository: ${{ github.repository }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: get upload url
+      id: get_upload_url
+      run: |
+        url=$(echo "$response" | jq -r '.upload_url')
+        echo "::set-output name=url::$url"
+      env: 
+          response:  ${{ steps.get_latest_release.outputs.data }}
+     
+    - name: Upload a Release Asset
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        # The URL for uploading assets to the release
+        upload_url:  ${{steps.get_upload_url.outputs.url}}
+        # The path to the asset you want to upload
+        asset_path: ./my-artifact.zip
+        # The name of the asset you want to upload
+        asset_name: my-artifact.zip
+        # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
+        asset_content_type: application/zip
