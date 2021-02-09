@@ -13,7 +13,7 @@ jobs:
       with:
         args: 'sh .github/scripts/arm64_test.sh' 
     - run: |
-        ls /home/runner/work/jobber/jobber/pkgs
+        cp /home/runner/work/jobber/jobber/pkgs/* .
     - uses: actions/upload-artifact@v1.0.0
       with:
          name: alpine-pkg-arm64
@@ -41,8 +41,8 @@ jobs:
         # The URL for uploading assets to the release
         upload_url:  ${{steps.get_upload_url.outputs.url}}
         # The path to the asset you want to upload
-        asset_path: /home/runner/work/jobber/jobber/pkg
+        asset_path: ./jobber-1.4.4-r0.apk
         # The name of the asset you want to upload
-        asset_name: /home/runner/work/jobber/jobber/pkg/
+        asset_name: jobber-1.4.4-r0.apk
         # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
         asset_content_type: application/zip
