@@ -22,10 +22,9 @@ jobs:
         with:
           name: alpine-pkg-arm64
           path: pkgs
-      - name: Upload wheel manylinux2014 to release
-        uses: skx/github-action-publish-binaries@release-1.3
+      - name: Upload to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: pkg/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          releaseId: ${{ needs.create_release.outputs.id }}
-          args: '*.bin'
