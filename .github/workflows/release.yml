@@ -1,4 +1,6 @@
 on:
+  push:
+    branches: [ master, maint-1.4 ]
   release:
     branches: [ master, maint-1.4 ]
 
